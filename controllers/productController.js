@@ -1,61 +1,34 @@
-import { v2 as cloudinary } from "cloudinary"
-import Product from "../models/Product.js"
+import { v2 as cloudinary } from "cloudinary";
+import Product from "../models/Product.js";
 
-// Add Product : /api/product/add
-export const addProduct = async (req, res)=>{
-    try {
-        let productData = JSON.parse(req.body.productData)
+const uploadImages = async (files) => {
+  return Promise.all(
+    files.map(async (file) => {
+      const result = await cloudinary.uploader.upload(file.path, { resource_type: "image" });
+      return result.secure_url;
+    })
+  );
+};
 
-        const images = req.files
+// Add Product
+export const addProduct = async (req, res) => {
+  try {
+    const productData = JSON.parse(req.body.productData || "{}");
 
-        let imagesUrl = await Promise.all(
-            images.map(async (item)=>{
-                let result = await cloudinary.uploader.upload(item.path, {resource_type: 'image'});
-                return result.secure_url
-            })
-        )
-
-        await Product.create({...productData, image: imagesUrl})
-
-        res.json({success: true, message: "Product Added"})
-
-    } catch (error) {
-        console.log(error.message);
-        res.json({ success: false, message: error.message })
+    if (!productData.name || !productData.price) {
+      return res.status(400).json({ success: false, message: "Missing required product fields" });
     }
-}
 
-// Get Product : /api/product/list
-export const productList = async (req, res)=>{
-    try {
-        const products = await Product.find({})
-        res.json({success: true, products})
-    } catch (error) {
-        console.log(error.message);
-        res.json({ success: false, message: error.message })
-    }
-}
+    const imagesUrl = req.files?.length ? await uploadImages(req.files) : [];
 
-// Get single Product : /api/product/id
-export const productById = async (req, res)=>{
-    try {
-        const { id } = req.body
-        const product = await Product.findById(id)
-        res.json({success: true, product})
-    } catch (error) {
-        console.log(error.message);
-        res.json({ success: false, message: error.message })
-    }
-}
+    const newProduct = await Product.create({ ...productData, image: imagesUrl });
 
-// Change Product inStock : /api/product/stock
-export const changeStock = async (req, res)=>{
-    try {
-        const { id, inStock } = req.body
-        await Product.findByIdAndUpdate(id, {inStock})
-        res.json({success: true, message: "Stock Updated"})
-    } catch (error) {
-        console.log(error.message);
-        res.json({ success: false, message: error.message })
-    }
-}
+    return res.status(201).json({
+      success: true,
+      message: "Product added successfully",
+      product: newProduct,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
