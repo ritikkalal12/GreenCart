@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 
 // 👇 NEW: imports for OTP
 import EmailVerification from '../models/EmailVerification.js';
@@ -213,7 +214,12 @@ export const googleAuth = async (req, res) => {
     });
 
     const payload = ticket.getPayload();
-    const { email, name, sub } = payload; // sub is Google user id
+    if (!payload) {
+      console.error('[googleAuth] no payload from google token');
+      return res.json({ success: false, message: 'Invalid Google token' });
+    }
+
+    const { email, name } = payload;
 
     if (!email) {
       return res.json({
@@ -226,11 +232,19 @@ export const googleAuth = async (req, res) => {
     let user = await User.findOne({ email });
 
     if (!user) {
+      // Create with a secure random password so Mongoose validators pass
+      const randomPassword = crypto.randomBytes(16).toString('hex');
+
       user = await User.create({
         name: name || 'Google User',
         email,
-        password: '', // or some placeholder – you won't use it for Google users
+        password: randomPassword,
+        // optional: isGoogle: true
       });
+
+      console.log('[googleAuth] created new user for', email);
+    } else {
+      console.log('[googleAuth] found existing user for', email);
     }
 
     // Create JWT
@@ -238,6 +252,7 @@ export const googleAuth = async (req, res) => {
       expiresIn: '7d',
     });
 
+    // Set cookie
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -250,7 +265,10 @@ export const googleAuth = async (req, res) => {
       user: { email: user.email, name: user.name },
     });
   } catch (error) {
-    console.log('[googleAuth]', error.message);
+    console.error(
+      '[googleAuth] error:',
+      error && error.message ? error.message : error
+    );
     return res.json({
       success: false,
       message: 'Google authentication failed',
