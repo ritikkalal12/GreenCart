@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Tests for server/controllers/orderController.js
  *
  * We focus on unit behavior: invalid input handling and that DB/stripe functions are invoked.
@@ -15,6 +15,11 @@ import {
 import Order from '../../models/Order.js';
 import Product from '../../models/Product.js';
 import User from '../../models/User.js';
+
+// mock jsonwebtoken to control verify() behavior for getOrderInvoice
+jest.mock('jsonwebtoken', () => ({
+  verify: jest.fn(() => ({ id: 'u' })), // default decoded token -> { id: 'u' }
+}));
 
 jest.mock('../../models/Order.js', () => ({
   create: jest.fn(),
@@ -175,10 +180,11 @@ describe('orderController', () => {
     });
 
     it('returns 404 when order not found', async () => {
+      // make jwt.verify return decoded { id: 'u' } via mocked jsonwebtoken above
       // Mock findById().populate().populate() -> resolves to null
       Order.findById.mockReturnValueOnce(makePopulateChain(null));
 
-      const req = { params: { id: '1' }, body: { userId: 'u' } };
+      const req = { params: { id: '1' }, cookies: { token: 'token' } };
       const res = { status: jest.fn().mockReturnThis(), json: jest.fn(), headersSent: false };
       await getOrderInvoice(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
@@ -189,7 +195,7 @@ describe('orderController', () => {
       // Mock findById().populate().populate() -> resolves to an order with different userId
       Order.findById.mockReturnValueOnce(makePopulateChain({ _id: '123', userId: 'other', items: [], amount: 0, createdAt: Date.now() }));
 
-      const req = { params: { id: '123' }, body: { userId: 'u' } };
+      const req = { params: { id: '123' }, cookies: { token: 'token' } };
       const res = { status: jest.fn().mockReturnThis(), json: jest.fn(), headersSent: false };
       await getOrderInvoice(req, res);
       expect(res.status).toHaveBeenCalledWith(403);
