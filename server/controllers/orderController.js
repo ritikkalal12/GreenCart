@@ -1,3 +1,5 @@
+// greencart/server/controllers/orderController.js
+
 import Order from '../models/Order.js';
 import Product from '../models/Product.js';
 import stripe from 'stripe';
@@ -5,12 +7,13 @@ import User from '../models/User.js';
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
+import jwt from 'jsonwebtoken';
 
 // Place Order COD : /api/order/cod
 export const placeOrderCOD = async (req, res) => {
   try {
     const { userId, items, address } = req.body;
-    if (!address || items.length === 0) {
+    if (!address || !items || items.length === 0) {
       return res.json({ success: false, message: 'Invalid data' });
     }
     // Calculate Amount Using Items
@@ -42,7 +45,7 @@ export const placeOrderStripe = async (req, res) => {
     const { userId, items, address } = req.body;
     const { origin } = req.headers;
 
-    if (!address || items.length === 0) {
+    if (!address || !items || items.length === 0) {
       return res.json({ success: false, message: 'Invalid data' });
     }
 
@@ -74,7 +77,6 @@ export const placeOrderStripe = async (req, res) => {
     const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
 
     // create line items for stripe
-
     const line_items = productData.map((item) => {
       return {
         price_data: {
@@ -82,7 +84,7 @@ export const placeOrderStripe = async (req, res) => {
           product_data: {
             name: item.name,
           },
-          unit_amount: Math.floor(item.price + item.price * 0.02) * 100, // still ok: rupees → paise
+          unit_amount: Math.floor(item.price + item.price * 0.02) * 100, // rupees -> paise
         },
         quantity: item.quantity,
       };
@@ -105,6 +107,7 @@ export const placeOrderStripe = async (req, res) => {
     return res.json({ success: false, message: error.message });
   }
 };
+
 // Stripe Webhooks to Verify Payments Action : /stripe
 export const stripeWebhooks = async (request, response) => {
   // Stripe Gateway Initialize
@@ -121,6 +124,7 @@ export const stripeWebhooks = async (request, response) => {
     );
   } catch (error) {
     response.status(400).send(`Webhook Error: ${error.message}`);
+    return;
   }
 
   // Handle the event
@@ -196,13 +200,48 @@ export const getAllOrders = async (req, res) => {
 export const getOrderInvoice = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId } = req.body; // from authUser middleware
 
     if (!id) {
       return res
         .status(400)
         .json({ success: false, message: 'Order id is required' });
     }
+
+    // === Extract token from cookie or Authorization header ===
+    let token = null;
+    if (req.cookies && req.cookies.token) {
+      token = req.cookies.token;
+    } else if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer ')
+    ) {
+      token = req.headers.authorization.split(' ')[1];
+    }
+
+    if (!token) {
+      return res
+        .status(401)
+        .json({ success: false, message: 'Authentication required' });
+    }
+
+    // verify JWT
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      console.error('[getOrderInvoice] token verify error', err && err.message);
+      return res
+        .status(401)
+        .json({ success: false, message: 'Invalid authentication token' });
+    }
+
+    const userId = decoded.id;
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ success: false, message: 'Invalid authentication token' });
+    }
+    // =========================================================
 
     const order = await Order.findById(id)
       .populate('items.product')
@@ -215,7 +254,7 @@ export const getOrderInvoice = async (req, res) => {
     }
 
     // ensure invoice only for that user
-    if (!userId || String(order.userId) !== String(userId)) {
+    if (String(order.userId) !== String(userId)) {
       return res
         .status(403)
         .json({ success: false, message: 'Not authorized to view invoice' });
@@ -231,8 +270,17 @@ export const getOrderInvoice = async (req, res) => {
     const fontPath = path.resolve('fonts/DejaVuSans.ttf');
 
     // Register font that supports ₹
-    doc.registerFont('Regular', fontPath);
-    doc.registerFont('Bold', fontPath);
+    if (fs.existsSync(fontPath)) {
+      doc.registerFont('Regular', fontPath);
+      doc.registerFont('Bold', fontPath);
+    } else {
+      // fallback - use default font if DejaVu not available
+      doc.registerFont('Regular', 'Helvetica');
+      doc.registerFont('Bold', 'Helvetica-Bold');
+      console.warn(
+        '[getOrderInvoice] DejaVuSans.ttf not found, using fallback fonts'
+      );
+    }
 
     const primaryColor = '#22c55e'; // green
     const lightGray = '#E5E7EB';
