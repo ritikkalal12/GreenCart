@@ -85,6 +85,7 @@ const MyOrders = () => {
       const token = (user && user.token) || localStorage.getItem('token');
       const config = {
         responseType: 'blob',
+        withCredentials: true, // ensure cookies are sent
         ...(token ? { headers: { Authorization: `Bearer ${token}` } } : {}),
       };
 
