@@ -328,140 +328,146 @@ The GreenCart system applies multiple software engineering principles.
 
 # 3.3 Dependency Inversion Principle:-
 
-Controllers do not depend on:
+- Controllers do not depend on:
 
-Database structure
+-Database structure
 
-External APIs directly
+- External APIs directly
 
-File uploads or email services
+- File uploads or email services
 
-These are abstracted into:
+- These are abstracted into:
 
-Config modules
+- Config modules
 
-Utility functions
+- Utility functions
 
-Middleware layers
+- Middleware layers
 
-3.4 Liskov Substitution & Interface-Like Structure
+# 3.4 Liskov Substitution & Interface-Like Structure:-
 
 Models substitute seamlessly in controllers because:
 
-Each adheres to defined behaviors
+- Each adheres to defined behaviors
 
-Controller logic expects generic patterns (CRUD, find, update)
+- Controller logic expects generic patterns (CRUD, find, update)
 
-No model relies on another’s implementation details
+- No model relies on another’s implementation details
 
-3.5 Separation of Concerns
+# 3.5 Separation of Concerns:-
 
-Split across system layers:
+- Split across system layers:
 
-Presentation (Frontend React)
+- Presentation (Frontend React)
 
-Business Logic (Model Methods)
+- Business Logic (Model Methods)
 
-Application Logic (Controllers)
+- Application Logic (Controllers)
 
-Security (Middlewares)
+- Security (Middlewares)
 
-Data Layer (MongoDB Models)
+- Data Layer (MongoDB Models)
 
-Third-Party Services (Configs)
+- Third-Party Services (Configs)
 
-3.6 Clean Code & Testability Principles
+# 3.6 Clean Code & Testability Principles:-
 
 Refactoring for testability required:
 
-Pure functions
+- Pure functions
 
-Dependency injection patterns
+- Dependency injection patterns
 
-Predictable async flows
+- Predictable async flows
 
-Eliminating side effects
+- Eliminating side effects
 
-Jest tests enforce this design by mocking:
+- Jest tests enforce this design by mocking:
 
-Cloudinary
+- Cloudinary
 
-Mailer
+- Mailer
 
-Multer
+- Multer
 
-MongoDB operations
+- MongoDB operations
 
-4. Key Refactoring Performed
-4.1 Complete Modularization of Backend
+# 4. Key Refactoring Performed:-
+
+# 4.1 Complete Modularization of Backend:-
 
 Before refactor:
-Logic lived inside route handlers.
+
+- Logic lived inside route handlers.
 
 After refactor:
 
-/controllers contains business rules
+- /controllers contains business rules
 
-/routes only maps endpoints
+- /routes only maps endpoints
 
-/middlewares control access
+- /middlewares control access
 
-/configs contain external integrations
+- /configs contain external integrations
 
-4.2 Product, Order, and Cart Logic Moved Into Model Methods
+# 4.2 Product, Order, and Cart Logic Moved Into Model Methods:-
 
-Examples:
+**Examples:**
 
-Order.computeTotal()
+- Order.computeTotal()
 
-Cart.updateQty()
+- Cart.updateQty()
 
-Product.applyOffer()
+- Product.applyOffer()
 
 This removed duplicated logic from multiple controllers.
 
-4.3 Consolidated Error Handler Patterns
+# 4.3 Consolidated Error Handler Patterns:-
 
 All controllers now follow:
 
 try {
+
    // business logic
+   
 } catch (error) {
+
    res.status(500).json({ message: error.message });
+   
 }
 
 
-Advantages:
+**Advantages:**
 
-predictable response
+- predictable response
 
-reusable Jest tests
+- reusable Jest tests
 
-easier debugging
+- easier debugging
 
-4.4 Authentication Flow Rewrite
+# 4.4 Authentication Flow Rewrite:-
 
 Earlier, seller and user authentication used similar duplicated code.
 
 Now:
 
-Common token verification logic extracted
+- Common token verification logic extracted
 
-Seller-specific & user-specific middlewares separated
+- Seller-specific & user-specific middlewares separated
 
-Reduced role checking complexity
+- Reduced role checking complexity
 
-4.5 Testing-Driven Refactoring
+# 4.5 Testing-Driven Refactoring:-
 
 As each folder got Jest test suites:
 
-Functions became pure and deterministic
+- Functions became pure and deterministic
 
-Controllers started sending consistent responses
+- Controllers started sending consistent responses
 
-Conditional logic simplified
+- Conditional logic simplified
 
-Database operations were abstracted for easy mocking
+- Database operations were abstracted for easy mocking
 
 This resulted in a cleaner, more maintainable backend.
 
@@ -469,20 +475,20 @@ This resulted in a cleaner, more maintainable backend.
 
 The GreenCart system now demonstrates:
 
-✔ Clean modular architecture
+- ✔ Clean modular architecture
 
-✔ Strong application of SOLID principles
+- ✔ Strong application of SOLID principles
 
-✔ Well-structured Mongoose schema design
+- ✔ Well-structured Mongoose schema design
 
-✔ Separation of concerns across every layer
+- ✔ Separation of concerns across every layer
 
-✔ Highly testable backend architecture
+- ✔ Highly testable backend architecture
 
-✔ Encapsulated business logic inside models
+- ✔ Encapsulated business logic inside models
 
-✔ Clear API routing and role-based access
+- ✔ Clear API routing and role-based access
 
-✔ Improved maintainability and scalability
+- ✔ Improved maintainability and scalability
 
 The design is now robust, extensible, and production-ready, supporting all e-commerce features with a professionally structured software architecture.
