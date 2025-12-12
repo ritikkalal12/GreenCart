@@ -306,12 +306,15 @@ npm test
 
 - Backend (Node.js + Express Serverless Functions)
 
-🔗 Live Deployment Link
+🔗 Live Deployment Link:-
+
 👉 https://green-cart-er7g.vercel.app/
 
 The entire deployment process followed the steps shown in this video tutorial:
 
-📺 Deployment Tutorial Reference: https://www.youtube.com/watch?v=xoZLBzi3fuM
+📺 Deployment Tutorial Reference:-
+
+https://www.youtube.com/watch?v=xoZLBzi3fuM
 
 ✅ Step-by-Step Deployment Guide:-
 
