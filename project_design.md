@@ -1,4 +1,4 @@
-🛠 GreenCart – Software Design Commentary (design.md)
+# 🛠 GreenCart – Software Design Commentary (design.md)
 
 # 1. Overview:-
 
@@ -28,7 +28,7 @@ GreenCart is a full-stack e-commerce platform designed to support:
 
 # The system includes:
 
-Backend (Node.js + Express):-
+**Backend (Node.js + Express):-**
 
 - Modular architecture with isolated controllers, routes, middleware, and configs
 
@@ -44,7 +44,7 @@ Backend (Node.js + Express):-
 
 - Jest-based unit tests for all critical modules
 
-Frontend (React + Context API):-
+**Frontend (React + Context API):-**
 
 - Component-driven UI
 
@@ -58,7 +58,7 @@ Frontend (React + Context API):-
 
 - Fully responsive UI
 
-Database (MongoDB / Mongoose):-
+**Database (MongoDB / Mongoose):-**
 
 The final class diagram reflects the complete backend schema:
 
@@ -98,7 +98,7 @@ Originally, all backend logic was merged inside routes and controllers with shar
 
 - Code duplication
 
-Improvement:-
+**Improvement:-**
 
 The entire backend was reorganized into a clean MVC-inspired structure:
 
@@ -114,7 +114,7 @@ server/
 
 Each layer now has a single responsibility, improving separation of concerns.
 
-Benefits:-
+**Benefits:-**
 
 - Increased maintainability
 
@@ -136,7 +136,7 @@ Repeated logic (example: error handling, DB calls, validation) was refactored in
 
 - Centralized error messages
 
-Benefits:-
+**Benefits:-**
 
 - Eliminated repetition (DRY principle)
 
@@ -158,7 +158,7 @@ The final class diagram reflects strong use of composition, aggregation, and ref
 
 - Category → Product is a strong aggregation
 
-Benefits:-
+**Benefits:-**
 
 - Data is structured around real-world relationships
 
@@ -172,161 +172,161 @@ Benefits:-
 
 Before refactoring, API keys and third-party services were initialized at multiple places.
 
-Improvement
+**Improvement:-**
 
 Configs were isolated into /configs:
 
-db.js → Database connection
+- db.js → Database connection
 
-cloudinary.js → Media storage
+- cloudinary.js → Media storage
 
-mailer.js → Email service
+- mailer.js → Email service
 
-multer.js → File upload handler
+- multer.js → File upload handler
 
-Benefits
+**Benefits:-**
 
-Enhances the Single Responsibility Principle
+- Enhances the Single Responsibility Principle
 
-Makes testing easier via dependency mocking
+- Makes testing easier via dependency mocking
 
-Supports environment-based reconfiguration
+- Supports environment-based reconfiguration
 
-2.5 Authentication & Authorization Redesign
+# 2.5 Authentication & Authorization Redesign:-
 
 The original JWT authentication had scattered validation logic.
 
-Improvement
+**Improvement:-**
 
 Two dedicated middleware units were implemented:
 
-authUser – Authenticates customers
+- authUser – Authenticates customers
 
-authSeller – Authenticates sellers
+- authSeller – Authenticates sellers
 
-Each middleware:
+**Each middleware:-**
 
-Extracts JWT
+- Extracts JWT
 
-Verifies token
+- Verifies token
 
-Attaches user/seller to request
+- Attaches user/seller to request
 
-Handles unauthorized access
+- Handles unauthorized access
 
-Benefits
+**Benefits:-**
 
-Clean security boundary
+- Clean security boundary
 
-Easily extendable role-based access
+- Easily extendable role-based access
 
-Improved error isolation
+- Improved error isolation
 
-2.6 Cart, Checkout, and Order Logic Refactor
+# 2.6 Cart, Checkout, and Order Logic Refactor:-
 
 Cart manipulation originally occurred partially on the frontend and partially in controllers.
 
-Improvement
+**Improvement:-**
 
 All core business logic moved into:
 
-Cart Model methods
+- Cart Model methods
 
-Order Model methods
+- Order Model methods
 
-Examples:
+**Examples:**
 
-addItem(product, qty)
+- addItem(product, qty)
 
-updateQty(product, qty)
+- updateQty(product, qty)
 
-computeTotal()
+- computeTotal()
 
-createOrder()
+- createOrder()
 
-Benefits
+**Benefits:-**
 
-Encapsulates business rules
+- Encapsulates business rules
 
-Ensures consistent behavior
+- Ensures consistent behavior
 
-Enables unit-testable logic inside models
+- Enables unit-testable logic inside models
 
-Reduces controller code size
+- Reduces controller code size
 
-2.7 Consistent API Design & Route Separation
+# 2.7 Consistent API Design & Route Separation:-
 
 Routes were reorganized into individual modules:
 
-/userRoutes
+- /userRoutes
 
-/productRoutes
+- /productRoutes
 
-/orderRoutes
+- /orderRoutes
 
-/cartRoutes
+- /cartRoutes
 
-/sellerRoutes
+- /sellerRoutes
 
-/addressRoutes
+- /addressRoutes
 
-Benefits include:
+**Benefits include:-**
 
-Cleaner routing table
+- Cleaner routing table
 
-Easier debugging
+- Easier debugging
 
-Flexible microservice migration in the future
+- Flexible microservice migration in the future
 
-2.8 Strong Test-Driven Structural Improvements
+# 2.8 Strong Test-Driven Structural Improvements:-
 
 Because backend testing was implemented early using Jest:
 
-Code had to be modular
+- Code had to be modular
 
-Controllers needed to return consistent outputs
+- Controllers needed to return consistent outputs
 
-Middlewares required predictable behavior
+- Middlewares required predictable behavior
 
-External dependencies were abstracted for mocking
+- External dependencies were abstracted for mocking
 
 This indirectly improved the entire backend architecture.
 
-3. Where Design Principles Were Applied
+# 3. Where Design Principles Were Applied? :-
 
 The GreenCart system applies multiple software engineering principles.
 
-3.1 Single Responsibility Principle (SRP)
+# 3.1 Single Responsibility Principle (SRP):-
 
-Examples:
+**Examples:**
 
-Controllers handle request flow only
+- Controllers handle request flow only
 
-Models contain business logic
+- Models contain business logic
 
-Middlewares handle authentication only
+- Middlewares handle authentication only
 
-Configs handle third-party integration only
+- Configs handle third-party integration only
 
-Utils handle rendering and formatting
+- Utils handle rendering and formatting
 
-Routes define endpoints only
+- Routes define endpoints only
 
-3.2 DRY (Don’t Repeat Yourself)
+# 3.2 DRY (Don’t Repeat Yourself):-
 
-Repeated logic consolidated into utilities:
+- Repeated logic consolidated into utilities:
 
-Cloudinary uploader
+- Cloudinary uploader
 
-Mailer wrapper
+- Mailer wrapper
 
-Standard response messages
+- Standard response messages
 
-Mongoose pre/post hooks
+- Mongoose pre/post hooks
 
-Cart total calculation logic
+- Cart total calculation logic
 
-3.3 Dependency Inversion Principle
+# 3.3 Dependency Inversion Principle:-
 
 Controllers do not depend on:
 
