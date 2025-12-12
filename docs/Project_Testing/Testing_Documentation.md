@@ -32,7 +32,7 @@ The goal of testing in the GreenCart backend is to ensure:
 
 ✔ Mocking of DB, APIs, Tokens, Uploads
 
-🧪 Testing Framework & Setup:-
+# 🧪 Testing Framework & Setup:-
 
 📌 Framework:
 
@@ -50,16 +50,17 @@ jest.setup.cjs
 
 📌 Commands:
 
-# Run all backend tests
+Run all backend tests:
 npm test
 
-# Watch mode
+Watch mode:
 npm run test:watch
 
-# Generate coverage report (optional if configured)
+Generate coverage report (optional if configured):
 npm run test:coverage
 
-📁 Test File Structure:-
+# 📁 Test File Structure:-
+
 server/
  └── tests/
       ├── configs/
@@ -90,11 +91,12 @@ server/
             └── userRoute.test.js
 
 
-# Total Test Suites: 19
+Total Test Suites: 19
 
-# Total Tests Executed: 61
+Total Tests Executed: 61
 
-# Total Tests Passed: 61 / 61 (100% pass rate)
+Total Tests Passed: 61 / 61 (100% pass rate)
+
 
 🧵 Mocking Strategy Used:-
 
