@@ -310,12 +310,6 @@ npm test
 
 👉 https://green-cart-er7g.vercel.app/
 
-The entire deployment process followed the steps shown in this video tutorial:
-
-📺 Deployment Tutorial Reference:-
-
-https://www.youtube.com/watch?v=xoZLBzi3fuM
-
 ✅ Step-by-Step Deployment Guide:-
 
 1️⃣ Prepare Your Project:
@@ -391,7 +385,7 @@ vercel --prod
 
 This generates your backend API URL like:
 
-https://greencart-backend.vercel.app/api/
+https://green-cart-two-beta.vercel.app/
 
 🎨 Frontend Deployment (React + Vite on Vercel):-
 
@@ -426,7 +420,7 @@ vercel --prod
 | Service      | Status             | URL                                                                        |
 | ------------ | ------------------ | -------------------------------------------------------------------------- |
 | **Frontend** | ✅ Live             | [https://green-cart-er7g.vercel.app/](https://green-cart-er7g.vercel.app/) |
-| **Backend**  | ✅ Hosted on Vercel | Auto-configured by serverless API                                          |
+| **Backend**  | ✅ Hosted on Vercel | Auto-configured by serverless API - https://green-cart-two-beta.vercel.app/ |
 | **Database** | MongoDB Atlas      | Connected using env variable                                               |
 
 
@@ -437,8 +431,6 @@ vercel --prod
 - No need to run node index.js on Vercel — it auto-generates API endpoints
 
 - All Express routes become serverless functions behind the scenes
-
-- Followed the exact deployment method shown in the reference video
 
 
 🤝 Contributing:-
