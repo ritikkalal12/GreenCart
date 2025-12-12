@@ -300,11 +300,11 @@ npm test
 
 🚀 Deployment Instructions (Frontend + Backend on Vercel):-
 
-GreenCart is fully deployed using Vercel, hosting both:
+- GreenCart is fully deployed using Vercel, hosting both:
 
-Frontend (React + Vite)
+- Frontend (React + Vite)
 
-Backend (Node.js + Express Serverless Functions)
+- Backend (Node.js + Express Serverless Functions)
 
 🔗 Live Deployment Link
 👉 https://green-cart-er7g.vercel.app/
@@ -420,15 +420,15 @@ vercel --prod
 
 🤝 Contributing:-
 
-Fork the repository
+- Fork the repository
 
-Create a new branch
+- Create a new branch
 
-Commit your changes
+- Commit your changes
 
-Push your branch
+- Push your branch
 
-Create Pull Request
+- Create Pull Request
 
 📜 License
 
