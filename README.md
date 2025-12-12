@@ -50,22 +50,31 @@ Before running this project, install:
 # 📥 1. Clone Repository
 
 ``bash
+
 git clone https://github.com/ritikkalal12/GreenCart.git
+
 cd GreenCart
 
 🧱 Backend Setup (server/)
+
 📁 Navigate to Server
+
 cd server
 
 🧱 Backend Setup (server/)
+
 📁 Navigate to Server
+
 cd server
 
 📦 Install Dependencies
+
 npm install
 
 ⚙️ Create .env File
+
 Create inside /server folder:
+
 touch .env
 
 Paste the following:
