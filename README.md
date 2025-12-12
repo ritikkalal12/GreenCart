@@ -421,6 +421,26 @@ npm run build
 
 vercel --prod
 
+🎉 Final Deployment Setup:-
+
+| Service      | Status             | URL                                                                        |
+| ------------ | ------------------ | -------------------------------------------------------------------------- |
+| **Frontend** | ✅ Live             | [https://green-cart-er7g.vercel.app/](https://green-cart-er7g.vercel.app/) |
+| **Backend**  | ✅ Hosted on Vercel | Auto-configured by serverless API                                          |
+| **Database** | MongoDB Atlas      | Connected using env variable                                               |
+
+
+✔ Additional Notes:-
+
+- Vercel automatically handles scaling through serverless functions
+
+- No need to run node index.js on Vercel — it auto-generates API endpoints
+
+- All Express routes become serverless functions behind the scenes
+
+- Followed the exact deployment method shown in the reference video
+
+
 🤝 Contributing:-
 
 - Fork the repository
