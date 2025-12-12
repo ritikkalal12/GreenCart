@@ -80,11 +80,13 @@ MONGODB_URI=<YOUR_MONGODB_URI>
 JWT_SECRET=<YOUR_JWT_SECRET>
 
 
+
 CLOUDINARY_CLOUD_NAME=<YOUR_CLOUD_NAME>
 
 CLOUDINARY_API_KEY=<YOUR_API_KEY>
 
 CLOUDINARY_API_SECRET=<YOUR_API_SECRET>
+
 
 
 MAILER_HOST=<SMTP_HOST>
@@ -133,64 +135,36 @@ npm run dev
 📁 Final Project Folder Structure:-
 
 greencart/
-
 ├── client/
-
 │   ├── public/
-
 │   ├── src/
-
 │   │   ├── assets/
-
 │   │   ├── components/
-
 │   │   ├── context/
-
 │   │   ├── pages/
-
 │   │   │   ├── seller/
-
 │   │   ├── services/
-
 │   │   ├── App.jsx
-
 │   │   └── main.jsx
-
 │   ├── package.json
-
 │   └── vite.config.js
-
 │
 ├── server/
-
 │   ├── configs/
-
 │   │   ├── db.js
-
 │   │   └── mailer.js
-
 │   ├── controllers/
-
 │   ├── middlewares/
-
 │   ├── models/
-
 │   ├── routes/
-
 │   ├── tests/
-
 │   ├── utils/
-
 │   ├── .env
-
 │   ├── package.json
-
 │   └── index.js
 │
 ├── .gitignore
-
 ├── README.md
-
 └── package.json
 
 
@@ -268,61 +242,61 @@ npm test
 
 ✔ User Features:
 
-Register / Login / JWT Auth
+- Register / Login / JWT Auth
 
-Browse products
+- Browse products
 
-Filter by category
+- Filter by category
 
-View product details
+- View product details
 
-Manage cart
+- Manage cart
 
-Place order
+- Place order
 
-Manage address
+- Manage address
 
 ✔ Seller Features
 
-Seller Login
+- Seller Login
 
-Add / Update / Delete Products
+- Add / Update / Delete Products
 
-Manage Orders
+- Manage Orders
 
-Seller Dashboard
+- Seller Dashboard
 
 ✔ System Features
 
-Cloudinary Image Upload
+- Cloudinary Image Upload
 
-Secure Authentication
+- Secure Authentication
 
-Error Handling
+- Error Handling
 
-Reusable React Components
+- Reusable React Components
 
-Automated Testing
+- Automated Testing
 
 🛠️ Built With
 
-React.js (Vite)
+- React.js (Vite)
 
-Node.js
+- Node.js
 
-Express.js
+- Express.js
 
-MongoDB + Mongoose
+- MongoDB + Mongoose
 
-JWT Authentication
+- JWT Authentication
 
-Cloudinary
+- Cloudinary
 
-Jest (Backend Tests)
+- Jest (Backend Tests)
 
-Vitest + React Testing Library (Frontend Tests)
+- Vitest + React Testing Library (Frontend Tests)
 
-TailwindCSS
+- TailwindCSS
 
 🚀 Deployment Instructions (Frontend + Backend on Vercel):-
 
