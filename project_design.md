@@ -82,6 +82,40 @@ The final class diagram reflects the complete backend schema:
 
 Each model clearly defines attributes, methods, and relationships (1-to-N, N-to-1, composition, aggregation).
 
+**Core Features:-**
+
+- User Authentication & Seller Authentication
+
+- Product Management (CRUD for sellers)
+
+- Cart & Checkout system
+
+- Address Management
+
+- Order Tracking (Pending → Processing → Delivered → Cancelled)
+
+- Payment workflow integrated logically (Stripe-ready structure)
+
+- Review & Category System
+
+- Reusable REST API architecture
+
+**System Capabilities:-**
+
+- Role-based access control
+
+- Secure password hashing
+
+- Efficient cart recalculation
+
+- Order lifecycle management
+
+- Product stock management
+
+- Image upload through Cloudinary
+
+- Highly modular backend and frontend
+
 # 2. How the Software Design Was Improved? :-
 
 - GreenCart underwent multiple rounds of architectural refinement to achieve a clean, scalable, and maintainable structure. Changes were driven by modularization, separation of concerns, and refactoring for clarity and testability.
@@ -292,27 +326,173 @@ Because backend testing was implemented early using Jest:
 
 This indirectly improved the entire backend architecture.
 
+# 2.9 Decoupled Authentication Logic:-
+
+Earlier, authentication and authorization logic was mixed inside routes.
+
+**Improvement:-**
+
+Created separate middlewares:
+
+- authUser.js
+
+- authSeller.js
+
+**Benefits:-**
+
+- Prevention of duplicate authentication code
+
+- Reusable across the entire API
+
+- Clear role-based access control
+
+This applies Single Responsibility Principle (SRP) and Open/Closed Principle (OCP).
+
+# 2.10 Improved Database Layer With Proper Schema Design:-
+
+The database schemas (User, Product, Cart, Order, Address, Review, Category) are designed to match real e-commerce workflows.
+
+**Improvements:-**
+
+- Added proper references (ObjectId) to model relationships
+
+- Normalized cart & order structure
+
+- Added enums for payment status, order status
+
+- Added nested subdocuments for order items
+
+- Avoided redundant duplication of product details
+
+**Outcome:-**
+- Your final class diagram accurately represents a clean domain model with clear relationships → 1.., 0.., composition, aggregation, and association.
+
+# 2.11 Cleaner Product & Cart Logic Through Utility-Based Updates:-
+
+Instead of recalculating totals everywhere:
+
+**Improvement:-**
+
+- Cart has computeTotal() method
+
+- Order has computeTotal() method
+
+- updateQty() and addItem() logic centralized
+
+**Benefits:-**
+
+- No duplicate logic
+
+- High consistency in calculations
+
+- Easy to update discounts, GST, fees in future
+
+This follows DRY (Don’t Repeat Yourself) + Encapsulation.
+
+# 2.12 Order Lifecycle Refactoring:-
+
+Originally, order creation lacked status control.
+
+**Improvement:-**
+
+Introduced full order lifecycle:
+
+- Pending
+
+- Picked Up
+
+- On the way
+
+- Delivered
+
+- Cancelled
+
+- Seller/Admin can update order status
+
+- Order maintains payment information separately (Payment class)
+
+This improves State Management and Domain-driven design.
+
+# 2.13 Cloudinary & Nodemailer Moved to Config Layer:-
+
+At first, integration keys were mixed inside controllers.
+
+**Improvement:-**
+
+All external services moved to /configs
+
+- cloudinary.js
+
+- mailer.js
+
+- multer.js
+
+- db.js
+
+**Benefits:-**
+
+- Centralized configuration
+
+- Easier deployment
+
+- More secure + reusable
+
+- Controllers stay clean and focused
+
+This applies Separation of Concerns & Dependency Inversion.
+
+# 2.14 Enhanced Folder Structure for Scalability:-
+
+server/
+│── configs/
+│── controllers/
+│── middlewares/
+│── routes/
+│── models/
+│── tests/
+client/
+│── src/components/
+│── src/pages/
+│── src/context/
+│── src/services/
+│── tests/
+
+
+This mirrors industry-level scalable architecture, making future microservice migration easier.
+
 # 3. Where Design Principles Were Applied? :-
 
 The GreenCart system applies multiple software engineering principles.
 
 # 3.1 Single Responsibility Principle (SRP):-
 
+Each component focuses on only one responsibility:
+
 **Examples:**
 
-- Controllers handle request flow only
+- Controllers → handle request logic
 
-- Models contain business logic
+- Routes → routing only
 
-- Middlewares handle authentication only
+- Middlewares → auth & validation
 
-- Configs handle third-party integration only
+- Models → data design
 
-- Utils handle rendering and formatting
+- Configs → initialize external services
 
-- Routes define endpoints only
+- Context API → global frontend state
 
-# 3.2 DRY (Don’t Repeat Yourself):-
+# 3.2 Open/Closed Principle (OCP):-
+
+The system is open for extension but closed for modification:
+
+- Adding new payment method (Stripe → PayPal) requires no change in Order logic
+
+- Adding new product categories requires no backend API change
+
+- Middleware architecture allows adding new roles
+- 
+# 3.3 DRY (Don’t Repeat Yourself):-
 
 - Repeated logic consolidated into utilities:
 
@@ -326,7 +506,15 @@ The GreenCart system applies multiple software engineering principles.
 
 - Cart total calculation logic
 
-# 3.3 Dependency Inversion Principle:-
+- Centralized error handling
+
+- Shared utility functions
+
+- Reusable validation
+
+- Reusable frontend components (Navbar, Footer, ProductCard)
+
+# 3.4 Dependency Inversion Principle:-
 
 - Controllers do not depend on:
 
@@ -344,7 +532,15 @@ The GreenCart system applies multiple software engineering principles.
 
 - Middleware layers
 
-# 3.4 Liskov Substitution & Interface-Like Structure:-
+Controllers depend on abstract services, not concrete implementations:
+
+- Cloudinary config file → not used directly
+
+- Nodemailer config → injected
+
+- Database config → abstracted
+
+# 3.5 Liskov Substitution & Interface-Like Structure:-
 
 Models substitute seamlessly in controllers because:
 
@@ -354,7 +550,17 @@ Models substitute seamlessly in controllers because:
 
 - No model relies on another’s implementation details
 
-# 3.5 Separation of Concerns:-
+User and Seller share similar behaviors:
+
+- Both authenticate
+
+- Both manage profiles
+
+- Both have separate dashboards
+
+Yet, seller-specific privileges do not break user behavior.
+
+# 3.6 Separation of Concerns:-
 
 - Split across system layers:
 
@@ -370,7 +576,7 @@ Models substitute seamlessly in controllers because:
 
 - Third-Party Services (Configs)
 
-# 3.6 Clean Code & Testability Principles:-
+# 3.7 Clean Code & Testability Principles:-
 
 Refactoring for testability required:
 
@@ -392,15 +598,132 @@ Refactoring for testability required:
 
 - MongoDB operations
 
+- Consistent naming
+
+- Async/Await everywhere
+
+- Try/Catch properly placed
+
+- Small functions instead of long blocks
+
+# 3.8 Interface Segregation Principle (ISP):-
+
+Frontend components and backend controllers follow minimal interfaces:
+
+- CartItem component expects only qty, price, product
+
+- ProductController handles only product-related operations
+
+- OrderController handles only order workflow
+
+No component depends on methods it does not use.
+
+# 3.9 Encapsulation & Information Hiding:-
+
+Models expose only necessary properties and use methods internally to maintain integrity.
+
+Example:
+
+- Cart does not allow manual modification of totals
+
+- Only addItem() and updateQty() can modify cart structure
+
 # 4. Key Refactoring Performed:-
 
-# 4.1 Complete Modularization of Backend:-
+# 4.1 Controller Logic Refactoring:-
 
-Before refactor:
+**Originally:** 
+- Large route handler files with mixed DB logic.
+
+**Now:**
+
+- Controllers are modular and testable
+
+- Reduced functions from 80+ lines → 20–30 lines
+
+- Each controller function handles:
+
+- Input validation
+
+- Logic execution
+
+- Response formatting
+
+# 4.2 Cart System Refactoring:-
+
+**Before:**
+
+- Cart recalculation scattered across 4–5 files
+
+- Duplicate logic for subtotal calculation
+
+**After:**
+
+- Centralized computeTotal() and subtotal() logic
+
+- CartItem structured properly
+
+- Quantity-based updates isolated
+
+# 4.3 Product Management Refactoring:-
+
+- Moved image handling to multer.js
+
+- Cloudinary upload decoupled from controller
+
+- Price & offerPrice validations standardized
+
+# 4.4 Authentication Refactoring:-
+
+**Before:**
+
+- Duplicate JWT verification
+
+- Password hashing repeated in multiple places
+
+**After:**
+
+- Centralized password hashing
+
+- Middleware verifies JWT uniformly
+
+- Role-based access logic cleaned
+
+# 4.5 Order Workflow Refactoring:-
+
+- Introduced status enum
+
+- Decoupled payment details
+
+- Cleaned lookup logic for seller and user
+
+# 4.6 Improved Testing Architecture:-
+
+**Before:**
+
+- No automated testing
+
+- Manual validation only
+
+**After:**
+
+- 61 Jest test cases
+
+- Configs, Controllers, Middlewares, Routes all tested
+
+- Tests placed using industry-standard folder structure
+
+- External dependencies mocked
+
+This significantly proves design reliability.
+
+# 4.7 Complete Modularization of Backend:-
+
+**Before refactor:**
 
 - Logic lived inside route handlers.
 
-After refactor:
+**After refactor:**
 
 - /controllers contains business rules
 
@@ -410,7 +733,7 @@ After refactor:
 
 - /configs contain external integrations
 
-# 4.2 Product, Order, and Cart Logic Moved Into Model Methods:-
+# 4.8 Product, Order, and Cart Logic Moved Into Model Methods:-
 
 **Examples:**
 
@@ -422,7 +745,7 @@ After refactor:
 
 This removed duplicated logic from multiple controllers.
 
-# 4.3 Consolidated Error Handler Patterns:-
+# 4.9 Consolidated Error Handler Patterns:-
 
 All controllers now follow:
 
@@ -436,7 +759,6 @@ try {
    
 }
 
-
 **Advantages:**
 
 - predictable response
@@ -445,11 +767,11 @@ try {
 
 - easier debugging
 
-# 4.4 Authentication Flow Rewrite:-
+# 4.10 Authentication Flow Rewrite:-
 
 Earlier, seller and user authentication used similar duplicated code.
 
-Now:
+**Now:**
 
 - Common token verification logic extracted
 
@@ -457,7 +779,7 @@ Now:
 
 - Reduced role checking complexity
 
-# 4.5 Testing-Driven Refactoring:-
+# 4.11 Testing-Driven Refactoring:-
 
 As each folder got Jest test suites:
 
@@ -471,9 +793,9 @@ As each folder got Jest test suites:
 
 This resulted in a cleaner, more maintainable backend.
 
-5. Final Summary
+# 5. Final Summary:-
 
-The GreenCart system now demonstrates:
+**The GreenCart system now demonstrates:**
 
 - ✔ Clean modular architecture
 
@@ -491,4 +813,30 @@ The GreenCart system now demonstrates:
 
 - ✔ Improved maintainability and scalability
 
+**The redesigned GreenCart system is now:**
+
+✔ More modular
+
+✔ More maintainable
+
+✔ More scalable
+
+✔ More testable
+
+✔ Cloud-ready (Vercel Deployment)
+
+✔ Designed using strong software engineering principles
+
+**This design.md file showcases:**
+
+- How the system architecture evolved
+
+- What improvements were made
+
+- Where each design principle was applied
+
+- How refactoring enhanced performance & maintainability
+
+- How the final class diagram maps perfectly to the backend models
+  
 The design is now robust, extensible, and production-ready, supporting all e-commerce features with a professionally structured software architecture.
