@@ -91,14 +91,14 @@ server/
             └── userRoute.test.js
 
 
-Total Test Suites: 19
+- Total Test Suites: 19
 
-Total Tests Executed: 61
+- Total Tests Executed: 61
 
-Total Tests Passed: 61 / 61 (100% pass rate)
+- Total Tests Passed: 61 / 61 (100% pass rate)
 
 
-🧵 Mocking Strategy Used:-
+# 🧵 Mocking Strategy Used:-
 
 All external dependencies were mocked using Jest:
 
@@ -111,7 +111,8 @@ All external dependencies were mocked using Jest:
 | JWT Middleware           | ✅       | Avoid real token signing  |
 | Express Response Objects | ✅       | Simulate status & JSON    |
 
-🧠 Test Breakdown by Module:-
+
+# 🧠 Test Breakdown by Module:-
 
 1️⃣ Config Tests (configs/):
 
@@ -354,7 +355,7 @@ Every route binding is tested using mocked Express Router.
 
 - Profile
 
-📊 Test Categories Summary:-
+# 📊 Test Categories Summary:-
 
 | Category           | Number of Tests | Description                           |
 | ------------------ | --------------- | ------------------------------------- |
@@ -363,7 +364,8 @@ Every route binding is tested using mocked Express Router.
 | Branching Logic    | ~8              | Conditional code flows                |
 | Exception Handling | ~8              | DB crash, invalid IDs, unknown errors |
 
-▶ How to Run the Entire Test Suite:-
+
+# ▶ How to Run the Entire Test Suite:-
 
 cd server
 
@@ -377,7 +379,8 @@ Expected Output:
 
 - All tests passed successfully!
 
-🔧 Continuous Integration (Optional):-
+
+# 🔧 Continuous Integration (Optional):-
 
 name: Run Backend Tests
 
@@ -400,8 +403,9 @@ jobs:
           cd server
           npm install
           npm test
+          
 
-⭐ Best Testing Practices Used:-
+# ⭐ Best Testing Practices Used:-
 
 ✔ Full mocking of external systems
 
@@ -415,7 +419,8 @@ jobs:
 
 ✔ Middleware, controller, and route isolation
 
-🚀 Future Test Enhancements (Recommended):-
+
+# 🚀 Future Test Enhancements (Recommended):-
 
 - Add integration tests for combined controller + DB flow
 
@@ -425,7 +430,9 @@ jobs:
 
 - Add API schema validation tests (Joi / Zod)
 
-📌 Conclusion:-
+
+# 📌 Conclusion:-
 
 - Your backend test suite is well-structured, fully isolated, and follows industry-standard testing guidelines.
+
 - All 61/61 test cases passed successfully, ensuring that your GreenCart backend is stable, reliable, and production-ready.
