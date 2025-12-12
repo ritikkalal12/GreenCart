@@ -1,4 +1,4 @@
-<img width="1611" height="990" alt="testcases_passed_output" src="https://github.com/user-attachments/assets/cf0f9d1c-a589-40bb-b39e-6e115fa1eb56" />✅ GreenCart – Backend Testing Documentation:-
+✅ GreenCart – Backend Testing Documentation:-
 
 This document provides a complete overview of all unit tests created for the GreenCart Server Backend, including architecture, test categories, execution flow, frameworks used, mocking strategy, and detailed breakdown of every tested module.
 
@@ -90,6 +90,7 @@ server/
             ├── sellerRoute.test.js
             └── userRoute.test.js
 
+<img width="1000" height="500" alt="testcases_passed_output" src="https://github.com/user-attachments/assets/cf0f9d1c-a589-40bb-b39e-6e115fa1eb56" />
 
 - Total Test Suites: 19
 
